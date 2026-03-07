@@ -1,5 +1,5 @@
 ---
-name: Google Chat API Development
+name: google-chat-api
 description: Provides comprehensive knowledge of Google Chat API for programmatic development, debugging, and research. Use this skill when the user is developing Google Chat apps, working with Google Chat API endpoints, troubleshooting Chat API issues, or needs information about Chat API resources, authentication, cards v2, or rate limits.
 ---
 
