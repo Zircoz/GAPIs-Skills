@@ -1,0 +1,4 @@
+## 2024-05-30 - [Webhook Secrets Leak in Request Exceptions]
+**Vulnerability:** Google Chat webhook secrets (key and token) passed via URL query parameters were leaked when `requests` threw a `RequestException` on network error, and the raw exception string (which contains the full URL) was printed to the console/logs.
+**Learning:** `requests.exceptions.RequestException` strings contain the full requested URL, including sensitive query parameters. Printing or logging raw network exceptions can inadvertently expose secrets to logs or end users.
+**Prevention:** Sanitize network exception messages by parsing and masking sensitive query parameters (e.g., using `re.sub`) before logging or displaying them. Avoid passing secrets in the URL if possible, or handle network exceptions gracefully without exposing raw connection details.

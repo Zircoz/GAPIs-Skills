@@ -15,7 +15,7 @@ Usage:
     python test_webhook.py --url "https://chat.googleapis.com/v1/spaces/.../messages?..." --text "Hello World"
     
     # Test formatted text
-    python test_webhook.py --url "URL" --text "*Bold* _italic_ \`code\`"
+    python test_webhook.py --url "URL" --text "*Bold* _italic_ `code`"
     
     # Test card from JSON file
     python test_webhook.py --url "URL" --card card.json
@@ -28,6 +28,7 @@ import argparse
 import requests
 import json
 import sys
+import re
 
 
 def load_json_file(filepath):
@@ -86,7 +87,11 @@ def send_to_webhook(webhook_url, payload):
             sys.exit(1)
             
     except requests.exceptions.RequestException as e:
-        print(f"❌ Network error: {e}")
+        error_msg = str(e)
+        # Sanitize error message to prevent leaking webhook key and token
+        error_msg = re.sub(r'([?&]key=)[^&\s]*', r'\1***', error_msg)
+        error_msg = re.sub(r'([?&]token=)[^&\s]*', r'\1***', error_msg)
+        print(f"❌ Network error: {error_msg}")
         sys.exit(1)
 
 
