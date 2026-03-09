@@ -1,0 +1,4 @@
+## 2024-05-24 - Unrestricted Webhook Testing Utilities (SSRF & DoS)
+**Vulnerability:** A CLI utility script (`test_webhook.py`) accepted any user-supplied URL and executed a `requests.post()` call to it without domain validation or a timeout. This creates Server-Side Request Forgery (SSRF) and Denial of Service (DoS) risks, especially if the utility is used in automated contexts.
+**Learning:** Even simple developer utility scripts can introduce critical vulnerabilities like SSRF if they handle external URLs dynamically. Relying on "developer discretion" is insufficient; the tool itself must enforce secure boundaries.
+**Prevention:** Always validate external URLs against a strict allowlist (e.g., `startswith("https://chat.googleapis.com/")`) and enforce explicit timeouts (e.g., `timeout=10`) for all outbound HTTP requests in utilities and CLIs.
