@@ -54,15 +54,15 @@ def send_to_webhook(webhook_url, payload):
     Returns:
         Response from the webhook
     """
-    print("\n📤 Sending message to webhook...")
-    print(f"   URL: {webhook_url[:50]}...")
-    print(f"   Payload preview:")
-    print(f"   {json.dumps(payload, indent=2)[:200]}...\n")
-    
     # Security: Validate URL to prevent SSRF and path traversal
     if not webhook_url.startswith("https://chat.googleapis.com/"):
         print("❌ Security Error: URL must start with https://chat.googleapis.com/")
         sys.exit(1)
+
+    print("\n📤 Sending message to webhook...")
+    print(f"   URL: {webhook_url[:50]}...")
+    print(f"   Payload preview:")
+    print(f"   {json.dumps(payload, indent=2)[:200]}...\n")
 
     try:
         # Security: Add timeout to prevent DoS via hanging connections
