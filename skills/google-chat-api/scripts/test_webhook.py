@@ -15,7 +15,7 @@ Usage:
     python test_webhook.py --url "https://chat.googleapis.com/v1/spaces/.../messages?..." --text "Hello World"
     
     # Test formatted text
-    python test_webhook.py --url "URL" --text "*Bold* _italic_ \`code\`"
+    python test_webhook.py --url "URL" --text "*Bold* _italic_ `code`"
     
     # Test card from JSON file
     python test_webhook.py --url "URL" --card card.json
@@ -54,16 +54,23 @@ def send_to_webhook(webhook_url, payload):
     Returns:
         Response from the webhook
     """
+    # Security: Validate URL to prevent SSRF and path traversal
+    if not webhook_url.startswith("https://chat.googleapis.com/"):
+        print("❌ Security Error: URL must start with https://chat.googleapis.com/")
+        sys.exit(1)
+
     print("\n📤 Sending message to webhook...")
     print(f"   URL: {webhook_url[:50]}...")
     print(f"   Payload preview:")
     print(f"   {json.dumps(payload, indent=2)[:200]}...\n")
-    
+
     try:
+        # Security: Add timeout to prevent DoS via hanging connections
         response = requests.post(
             webhook_url,
             json=payload,
-            headers={'Content-Type': 'application/json; charset=UTF-8'}
+            headers={'Content-Type': 'application/json; charset=UTF-8'},
+            timeout=10
         )
         
         if response.status_code == 200:
