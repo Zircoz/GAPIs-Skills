@@ -93,7 +93,9 @@ def send_to_webhook(webhook_url, payload):
             sys.exit(1)
             
     except requests.exceptions.RequestException as e:
-        print(f"❌ Network error: {e}")
+        # Security: Do not log the exception object `e` directly as it contains
+        # the full requested URL, which includes sensitive webhook tokens.
+        print(f"❌ Network error occurred while connecting to webhook")
         sys.exit(1)
 
 
